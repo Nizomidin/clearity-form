@@ -80,10 +80,33 @@ export default {
             height: "0",
           },
         },
+        glitch: {
+          '0%, 100%': { transform: 'translate(0)' },
+          '20%': { transform: 'translate(-2px, 2px)' },
+          '40%': { transform: 'translate(-2px, -2px)' },
+          '60%': { transform: 'translate(2px, 2px)' },
+          '80%': { transform: 'translate(2px, -2px)' },
+        },
+        'pulse-glow': {
+          '0%, 100%': { boxShadow: '0 0 20px hsl(var(--cyber-glow) / 0.3)' },
+          '50%': { boxShadow: '0 0 40px hsl(var(--cyber-glow) / 0.6)' },
+        },
+        'scan-line': {
+          '0%': { transform: 'translateY(-100%)' },
+          '100%': { transform: 'translateY(100vh)' },
+        },
+        'particle-rise': {
+          '0%': { transform: 'translateY(0) scale(1)', opacity: '1' },
+          '100%': { transform: 'translateY(-100px) scale(0)', opacity: '0' },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        glitch: "glitch 0.3s ease-in-out",
+        'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
+        'scan-line': 'scan-line 8s linear infinite',
+        'particle-rise': 'particle-rise 2s ease-out forwards',
       },
     },
   },
