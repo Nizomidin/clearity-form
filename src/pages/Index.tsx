@@ -73,9 +73,6 @@ const Index = () => {
 
   const handleYes = () => {
     setStage('transition');
-    if (transitionVideoRef.current) {
-      transitionVideoRef.current.play();
-    }
   };
 
   const handleNo = () => {
@@ -145,12 +142,11 @@ const Index = () => {
   };
 
   useEffect(() => {
-    if (transitionVideoRef.current) {
-      transitionVideoRef.current.addEventListener('ended', () => {
-        setStage('calibration1');
-      });
+    // Ensure AI face video loops
+    if (videoRef.current) {
+      videoRef.current.play().catch(err => console.log('Video autoplay prevented:', err));
     }
-  }, []);
+  }, [stage]);
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-background">
@@ -176,8 +172,10 @@ const Index = () => {
           ref={transitionVideoRef}
           src="/videos/transition.mp4"
           className="fixed inset-0 w-full h-full object-cover z-50"
+          autoPlay
           playsInline
           muted
+          onEnded={() => setStage('calibration1')}
         />
       )}
 
