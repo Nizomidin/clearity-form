@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TypingText } from '@/components/TypingText';
 import { ThinkingSequence } from '@/components/ThinkingSequence';
+import { TypingThinking } from '@/components/TypingThinking';
 import { CyberButton } from '@/components/CyberButton';
 import { NeuralPulse } from '@/components/NeuralPulse';
 import { DataParticles } from '@/components/DataParticles';
@@ -13,11 +14,17 @@ type Stage =
   | 'preBoot' 
   | 'intro' 
   | 'transition' 
+  | 'calibration1Thinking'
   | 'calibration1' 
+  | 'calibration2Thinking'
   | 'calibration2' 
+  | 'cognition1Thinking'
   | 'cognition1' 
+  | 'cognition2Thinking'
   | 'cognition2' 
+  | 'commitmentThinking'
   | 'commitment' 
+  | 'contactThinking'
   | 'contact' 
   | 'finalThinking' 
   | 'final'
@@ -83,8 +90,7 @@ const Index = () => {
     setShowAnimation(true);
     setTimeout(() => {
       setShowAnimation(false);
-      setStage('calibration2');
-      setShowTyping(true); // Keep typing state true
+      setStage('calibration2Thinking');
     }, 2000);
   };
 
@@ -92,8 +98,7 @@ const Index = () => {
     setShowAnimation(true);
     setTimeout(() => {
       setShowAnimation(false);
-      setStage('cognition1');
-      setShowTyping(true); // Keep typing state true
+      setStage('cognition1Thinking');
     }, 2000);
   };
 
@@ -101,8 +106,7 @@ const Index = () => {
     setShowAnimation(true);
     setTimeout(() => {
       setShowAnimation(false);
-      setStage('cognition2');
-      setShowTyping(true); // Keep typing state true
+      setStage('cognition2Thinking');
     }, 2000);
   };
 
@@ -110,8 +114,7 @@ const Index = () => {
     setShowAnimation(true);
     setTimeout(() => {
       setShowAnimation(false);
-      setStage('commitment');
-      setShowTyping(true); // Keep typing state true
+      setStage('commitmentThinking');
     }, 2000);
   };
 
@@ -119,8 +122,7 @@ const Index = () => {
     setShowAnimation(true);
     setTimeout(() => {
       setShowAnimation(false);
-      setStage('contact');
-      setShowTyping(true); // Keep typing state true
+      setStage('contactThinking');
     }, 1500);
   };
 
@@ -150,21 +152,44 @@ const Index = () => {
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-background">
+      {/* Vignette overlay */}
+      <div className="fixed inset-0 vignette pointer-events-none z-20" />
+      
+      {/* Scanline effect */}
+      <div className="fixed inset-0 scanline pointer-events-none z-30 opacity-30" />
+
+      {/* Apocalyptic background grid */}
+      <div className="fixed inset-0 opacity-10">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `
+            linear-gradient(hsl(var(--primary) / 0.3) 1px, transparent 1px),
+            linear-gradient(90deg, hsl(var(--primary) / 0.3) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px'
+        }} />
+      </div>
+
       {/* Background particles */}
-      <div className="absolute inset-0 opacity-20">
-        {Array.from({ length: 50 }).map((_, i) => (
+      <div className="absolute inset-0 opacity-30">
+        {Array.from({ length: 80 }).map((_, i) => (
           <div
             key={i}
-            className="absolute w-1 h-1 bg-primary rounded-full"
+            className="absolute w-0.5 h-0.5 bg-primary rounded-full"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
               animation: `particle-rise ${5 + Math.random() * 5}s linear infinite`,
-              animationDelay: `${Math.random() * 5}s`
+              animationDelay: `${Math.random() * 5}s`,
+              boxShadow: '0 0 4px hsl(var(--cyber-glow))'
             }}
           />
         ))}
       </div>
+
+      {/* Random glitch effects */}
+      <div className="fixed top-10 left-10 w-32 h-px bg-primary opacity-20 animate-pulse" />
+      <div className="fixed bottom-20 right-20 w-40 h-px bg-secondary opacity-20 animate-pulse" style={{ animationDelay: '1s' }} />
+      <div className="fixed top-1/3 right-10 w-24 h-px bg-primary opacity-20 animate-pulse" style={{ animationDelay: '2s' }} />
 
       {/* Transition video */}
       {stage === 'transition' && (
@@ -192,13 +217,15 @@ const Index = () => {
               <video
                 ref={videoRef}
                 src="/videos/ai-face.mp4"
-                className="w-48 h-48 object-cover rounded-full border-2 border-primary animate-pulse-glow"
+                className="w-56 h-56 object-cover rounded-full border-2 border-primary animate-pulse-glow"
                 autoPlay
                 loop
                 muted
                 playsInline
               />
               <div className="absolute inset-0 rounded-full bg-primary/10 animate-pulse-glow" />
+              {/* Glitch overlay */}
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/20 to-transparent animate-glitch opacity-30" />
             </div>
           </motion.div>
         )}
@@ -259,6 +286,14 @@ const Index = () => {
             </motion.div>
           )}
 
+          {/* Calibration 1 Thinking */}
+          {stage === 'calibration1Thinking' && (
+            <TypingThinking
+              lines={['– processing neural data…', '– recalibrating consciousness filters…', '– next sequence ready.']}
+              onComplete={() => setStage('calibration1')}
+            />
+          )}
+
           {/* Calibration 1 */}
           {stage === 'calibration1' && (
             <motion.div
@@ -301,6 +336,14 @@ const Index = () => {
             </motion.div>
           )}
 
+          {/* Calibration 2 Thinking */}
+          {stage === 'calibration2Thinking' && (
+            <TypingThinking
+              lines={['– analyzing response pattern…', '– adjusting behavioral matrix…', '– connection stabilized.']}
+              onComplete={() => setStage('calibration2')}
+            />
+          )}
+
           {/* Calibration 2 */}
           {stage === 'calibration2' && (
             <motion.div
@@ -339,6 +382,14 @@ const Index = () => {
             </motion.div>
           )}
 
+          {/* Cognition 1 Thinking */}
+          {stage === 'cognition1Thinking' && (
+            <TypingThinking
+              lines={['– decoding thought architecture…', '– mapping mental pathways…', '– synchronization complete.']}
+              onComplete={() => setStage('cognition1')}
+            />
+          )}
+
           {/* Cognition 1 */}
           {stage === 'cognition1' && (
             <motion.div
@@ -367,6 +418,14 @@ const Index = () => {
             </motion.div>
           )}
 
+          {/* Cognition 2 Thinking */}
+          {stage === 'cognition2Thinking' && (
+            <TypingThinking
+              lines={['– integrating consciousness data…', '– building neural profile…', '– pattern recognition active.']}
+              onComplete={() => setStage('cognition2')}
+            />
+          )}
+
           {/* Cognition 2 */}
           {stage === 'cognition2' && (
             <motion.div
@@ -393,6 +452,14 @@ const Index = () => {
                 {showAnimation && <GeometricCube />}
               </AnimatePresence>
             </motion.div>
+          )}
+
+          {/* Commitment Thinking */}
+          {stage === 'commitmentThinking' && (
+            <TypingThinking
+              lines={['– evaluating commitment level…', '– establishing trust protocol…', '– ready to proceed.']}
+              onComplete={() => setStage('commitment')}
+            />
           )}
 
           {/* Commitment */}
@@ -435,6 +502,14 @@ const Index = () => {
                 {showAnimation && <NeuralCircuit />}
               </AnimatePresence>
             </motion.div>
+          )}
+
+          {/* Contact Thinking */}
+          {stage === 'contactThinking' && (
+            <TypingThinking
+              lines={['– preparing communication channel…', '– securing data transmission…', '– final sync initiated.']}
+              onComplete={() => setStage('contact')}
+            />
           )}
 
           {/* Contact */}
