@@ -507,6 +507,9 @@ const Index = () => {
                 text="What are you prepared to contribute to the restoration of human clarity?"
                 className="text-lg"
               />
+              <div className="text-sm text-muted-foreground terminal-text mt-4">
+                Select all that apply
+              </div>
               <div className="space-y-4 pt-4">
                 {[
                   'Share ideas and insights',
