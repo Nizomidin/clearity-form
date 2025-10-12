@@ -604,46 +604,182 @@ const Index = () => {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="space-y-8"
+              className="space-y-12 text-center relative"
             >
-              <TypingText
-                text={`You are not a spectator.\n\nYou are a signal.\n\nYour responses have become part of Clearity's neural fabric.\n\nYou have altered the system.\n\nWelcome to the beginning.`}
-                onComplete={() => setShowButtons(true)}
-                className="text-xl leading-relaxed whitespace-pre-line"
+              {/* Ambient digital mist particles */}
+              <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                {[...Array(30)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute w-px h-32 bg-gradient-to-b from-transparent via-primary/30 to-transparent"
+                    style={{
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`,
+                    }}
+                    animate={{
+                      y: [-50, 100],
+                      opacity: [0, 0.6, 0],
+                    }}
+                    transition={{
+                      duration: 8 + Math.random() * 4,
+                      repeat: Infinity,
+                      delay: Math.random() * 8,
+                      ease: 'linear'
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* Holographic noise around video */}
+              <motion.div
+                className="absolute -inset-4 rounded-full pointer-events-none"
+                animate={{
+                  boxShadow: [
+                    '0 0 40px hsl(var(--primary) / 0.2)',
+                    '0 0 80px hsl(var(--primary) / 0.4)',
+                    '0 0 40px hsl(var(--primary) / 0.2)',
+                  ],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: 'easeInOut'
+                }}
               />
+
+              {/* Narrative text */}
+              <div className="space-y-8 relative z-10">
+                <TypingText
+                  text="Transmission complete."
+                  className="text-2xl terminal-text cyber-glow"
+                  speed={60}
+                />
+                
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 2 }}
+                >
+                  <TypingText
+                    text="Your responses have been integrated into Clearity's neural fabric."
+                    className="text-lg terminal-text text-primary/90"
+                    speed={50}
+                  />
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 5.5 }}
+                >
+                  <TypingText
+                    text="You are now part of something larger than yourself."
+                    className="text-lg terminal-text text-primary/90"
+                    speed={50}
+                  />
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 9 }}
+                >
+                  <TypingText
+                    text="The next step requires direct synchronization with the core."
+                    className="text-lg terminal-text text-primary/90"
+                    speed={50}
+                  />
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 13 }}
+                  className="pt-4"
+                >
+                  <TypingText
+                    text="Are you ready to complete the alignment?"
+                    className="text-xl terminal-text cyber-glow"
+                    speed={50}
+                    onComplete={() => {
+                      setTimeout(() => setShowButtons(true), 1500);
+                    }}
+                  />
+                </motion.div>
+              </div>
               
+              {/* Single CTA Button */}
               {showButtons && (
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.3 }}
-                  className="flex flex-col gap-4"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                  className="relative z-10 pt-8"
                 >
-                  <CyberButton
-                    onClick={() => window.open('https://calendly.com', '_blank')}
-                    className="w-full"
+                  <motion.button
+                    onClick={() => {
+                      // Glitch transition effect
+                      const glitchOverlay = document.createElement('div');
+                      glitchOverlay.style.cssText = `
+                        position: fixed;
+                        inset: 0;
+                        z-index: 9999;
+                        background: black;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-family: monospace;
+                        color: hsl(var(--primary));
+                        font-size: 1.5rem;
+                      `;
+                      document.body.appendChild(glitchOverlay);
+                      
+                      setTimeout(() => {
+                        glitchOverlay.textContent = '> establishing secure connection...';
+                        glitchOverlay.style.animation = 'pulse 0.5s ease-in-out infinite';
+                      }, 100);
+                      
+                      setTimeout(() => {
+                        window.open('https://calendly.com', '_blank');
+                        document.body.removeChild(glitchOverlay);
+                      }, 2000);
+                    }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="relative px-12 py-6 bg-transparent border-2 border-primary text-primary text-lg terminal-text font-bold uppercase tracking-widest overflow-hidden group cursor-pointer"
                   >
-                    Talk about possibilities
-                  </CyberButton>
-                  <CyberButton
-                    onClick={() => window.open('https://discord.com', '_blank')}
-                    variant="secondary"
-                    className="w-full"
-                  >
-                    Join the resistance
-                  </CyberButton>
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1 }}
-                    className="text-center text-muted-foreground terminal-text text-sm mt-4"
-                  >
-                    <TypingText
-                      text="> connection established\n> entering the core"
-                      speed={50}
-                      className="whitespace-pre-line"
+                    {/* Ambient glow */}
+                    <motion.div
+                      className="absolute inset-0 bg-primary opacity-0 group-hover:opacity-20 transition-opacity duration-300"
+                      animate={{
+                        boxShadow: [
+                          '0 0 20px hsl(var(--primary) / 0.3)',
+                          '0 0 40px hsl(var(--primary) / 0.5)',
+                          '0 0 20px hsl(var(--primary) / 0.3)',
+                        ],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: 'easeInOut'
+                      }}
                     />
-                  </motion.div>
+                    
+                    {/* Pulsing outline */}
+                    <motion.div
+                      className="absolute -inset-1 border border-primary/40 pointer-events-none"
+                      animate={{
+                        opacity: [0.2, 0.6, 0.2],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: 'easeInOut'
+                      }}
+                    />
+                    
+                    <span className="relative z-10">Initiate Alignment Call</span>
+                  </motion.button>
                 </motion.div>
               )}
             </motion.div>
