@@ -231,31 +231,33 @@ const Index = () => {
       />
 
       {/* Transition video */}
-      {stage === 'transition' && (
-        <motion.div
-          initial={{ opacity: 0, scale: 1.2 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.8 }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}
-          className="fixed inset-0 z-50"
-        >
-          <video
-            ref={transitionVideoRef}
-            src="/videos/transition.mp4"
-            className="w-full h-full object-cover"
-            autoPlay
-            playsInline
-            muted
-            onTimeUpdate={(e) => {
-              const video = e.currentTarget;
-              if (video.currentTime >= 4) {
-                setStage('calibration1');
-              }
-            }}
-          />
-          <div className="absolute inset-0 bg-primary/10 mix-blend-overlay" />
-        </motion.div>
-      )}
+      <AnimatePresence mode="wait">
+        {stage === 'transition' && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+            className="fixed inset-0 z-50"
+          >
+            <video
+              ref={transitionVideoRef}
+              src="/videos/transition.mp4"
+              className="w-full h-full object-cover"
+              autoPlay
+              playsInline
+              muted
+              onTimeUpdate={(e) => {
+                const video = e.currentTarget;
+                if (video.currentTime >= 4) {
+                  setStage('calibration1');
+                }
+              }}
+            />
+            <div className="absolute inset-0 bg-primary/10 mix-blend-overlay" />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Main content */}
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center p-8">
@@ -360,8 +362,9 @@ const Index = () => {
           {/* Calibration 1 */}
           {stage === 'calibration1' && (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
               className="space-y-8"
             >
               {!showTyping ? (
