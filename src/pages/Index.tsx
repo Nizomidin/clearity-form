@@ -8,18 +8,18 @@ import { DataParticles } from '@/components/DataParticles';
 import { GeometricCube } from '@/components/GeometricCube';
 import { ScanLine } from '@/components/ScanLine';
 import { NeuralCircuit } from '@/components/NeuralCircuit';
-import { DigitalRainTransition } from '@/components/transitions/DigitalRainTransition';
-import { CircleWaveTransition } from '@/components/transitions/CircleWaveTransition';
-import { GridPulseTransition } from '@/components/transitions/GridPulseTransition';
-import { ScanLineTransition } from '@/components/transitions/ScanLineTransition';
-import { ParticleExplosion } from '@/components/transitions/ParticleExplosion';
+import { MatrixRainTransition } from '@/components/transitions/MatrixRainTransition';
+import { HexagonWaveTransition } from '@/components/transitions/HexagonWaveTransition';
+import { DataStreamTransition } from '@/components/transitions/DataStreamTransition';
+import { CircuitBoardTransition } from '@/components/transitions/CircuitBoardTransition';
 
 type Stage = 
   | 'preBoot' 
   | 'intro' 
   | 'transition' 
   | 'calibration1' 
-  | 'calibration2' 
+  | 'calibration2'
+  | 'calibration2Thinking'
   | 'cognition1' 
   | 'cognition2' 
   | 'commitment' 
@@ -71,6 +71,13 @@ const Index = () => {
     '– connection locked.'
   ];
 
+  const calibration2Thinking = [
+    '– evaluating cognitive patterns…',
+    '– analyzing response integrity…',
+    '– determining compatibility level…',
+    '– assessment complete.'
+  ];
+
   const finalThinkingLines = [
     '– analyzing signal integrity…',
     '– reconstructing neural imprint…',
@@ -86,21 +93,12 @@ const Index = () => {
   };
 
   const handleCalibration1Submit = () => {
-    setShowAnimation(true);
-    setTimeout(() => {
-      setShowAnimation(false);
-      setStage('calibration2');
-      setShowTyping(true);
-    }, 1000);
+    setStage('calibration2');
+    setShowTyping(true);
   };
 
   const handleCalibration2Submit = () => {
-    setShowAnimation(true);
-    setTimeout(() => {
-      setShowAnimation(false);
-      setStage('cognition1');
-      setShowTyping(true);
-    }, 1000);
+    setStage('calibration2Thinking');
   };
 
   const handleCognition1Submit = () => {
@@ -109,7 +107,7 @@ const Index = () => {
       setShowAnimation(false);
       setStage('cognition2');
       setShowTyping(true);
-    }, 1000);
+    }, 1500);
   };
 
   const handleCognition2Submit = () => {
@@ -118,7 +116,7 @@ const Index = () => {
       setShowAnimation(false);
       setStage('commitment');
       setShowTyping(true);
-    }, 1000);
+    }, 1500);
   };
 
   const handleCommitmentSubmit = () => {
@@ -127,7 +125,7 @@ const Index = () => {
       setShowAnimation(false);
       setStage('contact');
       setShowTyping(true);
-    }, 1000);
+    }, 1500);
   };
 
   const handleContactSubmit = () => {
@@ -250,7 +248,7 @@ const Index = () => {
             muted
             onTimeUpdate={(e) => {
               const video = e.currentTarget;
-              if (video.currentTime >= 5) {
+              if (video.currentTime >= 4) {
                 setStage('calibration1');
               }
             }}
@@ -395,9 +393,6 @@ const Index = () => {
                   </div>
                 </>
               )}
-              <AnimatePresence>
-                {showAnimation && <DigitalRainTransition />}
-              </AnimatePresence>
             </motion.div>
           )}
 
@@ -433,10 +428,16 @@ const Index = () => {
                   </div>
                 </>
               )}
-              <AnimatePresence>
-                {showAnimation && <CircleWaveTransition />}
-              </AnimatePresence>
             </motion.div>
+          )}
+
+          {/* Calibration 2 Thinking */}
+          {stage === 'calibration2Thinking' && (
+            <ThinkingSequence
+              lines={calibration2Thinking}
+              speed={1800}
+              onComplete={() => setStage('cognition1')}
+            />
           )}
 
           {/* Cognition 1 */}
@@ -462,7 +463,7 @@ const Index = () => {
                 </CyberButton>
               </div>
               <AnimatePresence>
-                {showAnimation && <GridPulseTransition />}
+                {showAnimation && <MatrixRainTransition />}
               </AnimatePresence>
             </motion.div>
           )}
@@ -490,7 +491,7 @@ const Index = () => {
                 </CyberButton>
               </div>
               <AnimatePresence>
-                {showAnimation && <ScanLineTransition />}
+                {showAnimation && <HexagonWaveTransition />}
               </AnimatePresence>
             </motion.div>
           )}
@@ -532,7 +533,7 @@ const Index = () => {
                 </CyberButton>
               </div>
               <AnimatePresence>
-                {showAnimation && <ParticleExplosion />}
+                {showAnimation && <DataStreamTransition />}
               </AnimatePresence>
             </motion.div>
           )}
@@ -575,7 +576,7 @@ const Index = () => {
                 </CyberButton>
               </div>
               <AnimatePresence>
-                {showAnimation && <ScanLine />}
+                {showAnimation && <CircuitBoardTransition />}
               </AnimatePresence>
             </motion.div>
           )}
