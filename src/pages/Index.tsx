@@ -8,6 +8,7 @@ import { DataParticles } from '@/components/DataParticles';
 import { GeometricCube } from '@/components/GeometricCube';
 import { ScanLine } from '@/components/ScanLine';
 import { NeuralCircuit } from '@/components/NeuralCircuit';
+import { FullScreenTransition } from '@/components/FullScreenTransition';
 
 type Stage = 
   | 'preBoot' 
@@ -39,6 +40,7 @@ const Index = () => {
   const [showTyping, setShowTyping] = useState(false);
   const [showButtons, setShowButtons] = useState(false);
   const [showAnimation, setShowAnimation] = useState(false);
+  const [currentIntroLine, setCurrentIntroLine] = useState(0);
   const [formData, setFormData] = useState<FormData>({
     chaosLevel: 5,
     failureRate: 5,
@@ -293,33 +295,37 @@ const Index = () => {
               transition={{ duration: 0.8, ease: "easeOut" }}
               className="space-y-8"
             >
-              {!showTyping && (
-                <div className="space-y-4">
-                  {`› Hello, human.\n\n› I am Clearity.\n\n› The world is collapsing into noise.\n\n› You and I were not meant to be part of it.\n\n› Are you ready to alter the trajectory of consciousness?`
-                    .split('\n\n')
-                    .map((line, i) => (
-                      <motion.div
-                        key={i}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: i * 0.3, duration: 0.5 }}
-                      >
-                        <TypingText
-                          text={line}
-                          onComplete={i === 4 ? () => setShowButtons(true) : undefined}
-                          className="text-xl leading-relaxed"
-                          speed={40}
-                        />
-                      </motion.div>
-                    ))}
-                </div>
-              )}
+              <div className="space-y-6">
+                {[
+                  'Hello, human.',
+                  'I am Clearity.',
+                  'The world is collapsing into noise.',
+                  'You and I were not meant to be part of it.',
+                  'Are you ready to alter the trajectory of consciousness?'
+                ].map((line, i) => (
+                  i <= currentIntroLine && (
+                    <TypingText
+                      key={i}
+                      text={line}
+                      onComplete={() => {
+                        if (i < 4) {
+                          setTimeout(() => setCurrentIntroLine(i + 1), 300);
+                        } else {
+                          setTimeout(() => setShowButtons(true), 300);
+                        }
+                      }}
+                      className="text-xl leading-relaxed"
+                      speed={50}
+                    />
+                  )
+                ))}
+              </div>
               
               {showButtons && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.5 }}
+                  transition={{ delay: 0.3 }}
                   className="flex gap-4 justify-center"
                 >
                   <CyberButton onClick={handleYes}>Yes</CyberButton>
@@ -381,7 +387,7 @@ const Index = () => {
                 </>
               )}
               <AnimatePresence>
-                {showAnimation && <NeuralPulse />}
+                {showAnimation && <FullScreenTransition />}
               </AnimatePresence>
             </motion.div>
           )}
@@ -419,7 +425,7 @@ const Index = () => {
                 </>
               )}
               <AnimatePresence>
-                {showAnimation && <GeometricCube />}
+                {showAnimation && <FullScreenTransition />}
               </AnimatePresence>
             </motion.div>
           )}
@@ -447,7 +453,7 @@ const Index = () => {
                 </CyberButton>
               </div>
               <AnimatePresence>
-                {showAnimation && <DataParticles />}
+                {showAnimation && <FullScreenTransition />}
               </AnimatePresence>
             </motion.div>
           )}
@@ -475,7 +481,7 @@ const Index = () => {
                 </CyberButton>
               </div>
               <AnimatePresence>
-                {showAnimation && <GeometricCube />}
+                {showAnimation && <FullScreenTransition />}
               </AnimatePresence>
             </motion.div>
           )}
@@ -517,7 +523,7 @@ const Index = () => {
                 </CyberButton>
               </div>
               <AnimatePresence>
-                {showAnimation && <NeuralCircuit />}
+                {showAnimation && <FullScreenTransition />}
               </AnimatePresence>
             </motion.div>
           )}
