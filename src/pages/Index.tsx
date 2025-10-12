@@ -150,21 +150,81 @@ const Index = () => {
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-background">
-      {/* Background particles */}
+      {/* Cyberpunk grid background */}
       <div className="absolute inset-0 opacity-20">
-        {Array.from({ length: 50 }).map((_, i) => (
-          <div
+        <div className="absolute inset-0" style={{
+          backgroundImage: `
+            linear-gradient(hsl(var(--primary) / 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, hsl(var(--primary) / 0.1) 1px, transparent 1px)
+          `,
+          backgroundSize: '50px 50px'
+        }} />
+      </div>
+
+      {/* Animated scanlines */}
+      <div className="absolute inset-0 pointer-events-none opacity-10">
+        {[...Array(3)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-full h-px bg-gradient-to-r from-transparent via-primary to-transparent"
+            initial={{ top: '-2px' }}
+            animate={{ top: '100%' }}
+            transition={{
+              duration: 8 + i * 2,
+              repeat: Infinity,
+              ease: 'linear',
+              delay: i * 2
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Floating particles */}
+      <div className="absolute inset-0 opacity-30 pointer-events-none">
+        {Array.from({ length: 80 }).map((_, i) => (
+          <motion.div
             key={i}
             className="absolute w-1 h-1 bg-primary rounded-full"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
-              animation: `particle-rise ${5 + Math.random() * 5}s linear infinite`,
-              animationDelay: `${Math.random() * 5}s`
+            }}
+            animate={{
+              y: [0, -100],
+              opacity: [0, 1, 0],
+              scale: [0, 1, 0]
+            }}
+            transition={{
+              duration: 4 + Math.random() * 4,
+              repeat: Infinity,
+              delay: Math.random() * 5,
+              ease: 'easeInOut'
             }}
           />
         ))}
       </div>
+
+      {/* Corner accents */}
+      <div className="absolute top-0 left-0 w-32 h-32 border-l-2 border-t-2 border-primary opacity-30" />
+      <div className="absolute top-0 right-0 w-32 h-32 border-r-2 border-t-2 border-primary opacity-30" />
+      <div className="absolute bottom-0 left-0 w-32 h-32 border-l-2 border-b-2 border-primary opacity-30" />
+      <div className="absolute bottom-0 right-0 w-32 h-32 border-r-2 border-b-2 border-primary opacity-30" />
+
+      {/* Glitch overlay */}
+      <motion.div
+        className="absolute inset-0 pointer-events-none mix-blend-overlay"
+        animate={{
+          opacity: [0, 0.1, 0],
+        }}
+        transition={{
+          duration: 0.1,
+          repeat: Infinity,
+          repeatDelay: 5 + Math.random() * 10
+        }}
+        style={{
+          background: 'linear-gradient(90deg, transparent 0%, hsl(var(--primary) / 0.3) 50%, transparent 100%)'
+        }}
+      />
 
       {/* Transition video */}
       {stage === 'transition' && (
