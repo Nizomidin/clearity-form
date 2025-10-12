@@ -604,173 +604,46 @@ const Index = () => {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="relative space-y-12"
+              className="space-y-8"
             >
-              {/* Digital mist overlay */}
-              <div className="absolute inset-0 -z-10">
-                {Array.from({ length: 30 }).map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute w-px h-32 bg-gradient-to-b from-transparent via-primary/20 to-transparent"
-                    style={{
-                      left: `${Math.random() * 100}%`,
-                      top: `${Math.random() * 100}%`,
-                    }}
-                    animate={{
-                      y: [0, -200, 0],
-                      opacity: [0, 0.5, 0],
-                    }}
-                    transition={{
-                      duration: 8 + Math.random() * 4,
-                      repeat: Infinity,
-                      delay: Math.random() * 5,
-                      ease: 'linear'
-                    }}
-                  />
-                ))}
-              </div>
-
-              {/* Holographic noise around video */}
-              <div className="absolute top-[-200px] left-1/2 -translate-x-1/2 w-64 h-64 -z-10">
-                <motion.div
-                  className="absolute inset-0 rounded-full"
-                  animate={{
-                    boxShadow: [
-                      '0 0 40px 10px rgba(6, 182, 212, 0.3)',
-                      '0 0 60px 20px rgba(16, 185, 129, 0.4)',
-                      '0 0 40px 10px rgba(6, 182, 212, 0.3)',
-                    ]
-                  }}
-                  transition={{
-                    duration: 4,
-                    repeat: Infinity,
-                    ease: 'easeInOut'
-                  }}
-                />
-              </div>
-
-              {/* Narrative text */}
-              <div className="space-y-8 text-center">
-                <TypingText
-                  text="Transmission complete."
-                  className="text-2xl"
-                  speed={60}
-                  onComplete={() => {}}
-                />
-                
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 2.5 }}
-                >
-                  <TypingText
-                    text="Your responses have been integrated into Clearity's neural fabric."
-                    className="text-lg text-primary/80"
-                    speed={50}
-                  />
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 6.5 }}
-                  className="space-y-8"
-                >
-                  <TypingText
-                    text="You are now part of something larger than yourself."
-                    className="text-lg"
-                    speed={50}
-                  />
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 10 }}
-                  className="space-y-8"
-                >
-                  <TypingText
-                    text="The next step requires direct synchronization with the core."
-                    className="text-lg text-primary/80"
-                    speed={50}
-                  />
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 14 }}
-                >
-                  <TypingText
-                    text="Are you ready to complete the alignment?"
-                    className="text-2xl"
-                    speed={60}
-                    onComplete={() => {
-                      setTimeout(() => setShowButtons(true), 1500);
-                    }}
-                  />
-                </motion.div>
-              </div>
-
-              {/* Single CTA Button */}
+              <TypingText
+                text={`You are not a spectator.\n\nYou are a signal.\n\nYour responses have become part of Clearity's neural fabric.\n\nYou have altered the system.\n\nWelcome to the beginning.`}
+                onComplete={() => setShowButtons(true)}
+                className="text-xl leading-relaxed whitespace-pre-line"
+              />
+              
               {showButtons && (
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 1, ease: "easeOut" }}
-                  className="flex justify-center pt-8"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="flex flex-col gap-4"
                 >
-                  <motion.button
-                    onClick={() => {
-                      // Glitch animation before redirect
-                      const glitchOverlay = document.createElement('div');
-                      glitchOverlay.className = 'fixed inset-0 z-[100] bg-background';
-                      document.body.appendChild(glitchOverlay);
-                      
-                      // Static glitch effect
-                      setTimeout(() => {
-                        glitchOverlay.style.opacity = '0.9';
-                        glitchOverlay.innerHTML = `
-                          <div class="flex items-center justify-center h-full">
-                            <div class="terminal-text text-primary text-lg">
-                              > establishing secure connection...
-                            </div>
-                          </div>
-                        `;
-                      }, 100);
-
-                      setTimeout(() => {
-                        window.open('https://calendly.com', '_blank');
-                        document.body.removeChild(glitchOverlay);
-                      }, 2000);
-                    }}
-                    whileHover={{ scale: 1.05 }}
-                    className="relative px-12 py-6 bg-transparent border-2 border-primary text-primary text-xl terminal-text overflow-hidden group"
+                  <CyberButton
+                    onClick={() => window.open('https://calendly.com', '_blank')}
+                    className="w-full"
                   >
-                    <motion.div
-                      className="absolute inset-0 bg-primary/10"
-                      animate={{
-                        opacity: [0.1, 0.3, 0.1]
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: 'easeInOut'
-                      }}
+                    Talk about possibilities
+                  </CyberButton>
+                  <CyberButton
+                    onClick={() => window.open('https://discord.com', '_blank')}
+                    variant="secondary"
+                    className="w-full"
+                  >
+                    Join the resistance
+                  </CyberButton>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1 }}
+                    className="text-center text-muted-foreground terminal-text text-sm mt-4"
+                  >
+                    <TypingText
+                      text="> connection established\n> entering the core"
+                      speed={50}
+                      className="whitespace-pre-line"
                     />
-                    <motion.div
-                      className="absolute inset-0 border-2 border-primary opacity-0 group-hover:opacity-100"
-                      animate={{
-                        scale: [1, 1.05, 1],
-                      }}
-                      transition={{
-                        duration: 1.5,
-                        repeat: Infinity,
-                        ease: 'easeInOut'
-                      }}
-                    />
-                    <span className="relative z-10">Initiate Alignment Call</span>
-                  </motion.button>
+                  </motion.div>
                 </motion.div>
               )}
             </motion.div>
