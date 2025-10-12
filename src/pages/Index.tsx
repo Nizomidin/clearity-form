@@ -135,7 +135,7 @@ const Index = () => {
     setTimeout(() => {
       setShowAnimation(false);
       setStage('finalThinking');
-    }, 1500);
+    }, 1200);
   };
 
   const toggleContribution = (value: string) => {
@@ -248,7 +248,12 @@ const Index = () => {
             autoPlay
             playsInline
             muted
-            onEnded={() => setStage('calibration1')}
+            onTimeUpdate={(e) => {
+              const video = e.currentTarget;
+              if (video.currentTime >= 5) {
+                setStage('calibration1');
+              }
+            }}
           />
           <div className="absolute inset-0 bg-primary/10 mix-blend-overlay" />
         </motion.div>
@@ -579,6 +584,7 @@ const Index = () => {
           {stage === 'finalThinking' && (
             <ThinkingSequence
               lines={finalThinkingLines}
+              speed={1700}
               onComplete={() => {
                 setStage('final');
                 setShowTyping(false);
@@ -593,18 +599,17 @@ const Index = () => {
               animate={{ opacity: 1 }}
               className="space-y-8"
             >
-              {!showTyping && (
-                <TypingText
-                  text={`You are not a spectator.\n\nYou are a signal.\n\nYour responses have become part of Clearity's neural fabric.\n\nYou have altered the system.\n\nWelcome to the beginning.`}
-                  onComplete={() => setShowButtons(true)}
-                  className="text-xl leading-relaxed whitespace-pre-line"
-                />
-              )}
+              <TypingText
+                text={`You are not a spectator.\n\nYou are a signal.\n\nYour responses have become part of Clearity's neural fabric.\n\nYou have altered the system.\n\nWelcome to the beginning.`}
+                onComplete={() => setShowButtons(true)}
+                className="text-xl leading-relaxed whitespace-pre-line"
+              />
               
               {showButtons && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
                   className="flex flex-col gap-4"
                 >
                   <CyberButton
