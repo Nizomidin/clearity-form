@@ -8,7 +8,11 @@ import { DataParticles } from '@/components/DataParticles';
 import { GeometricCube } from '@/components/GeometricCube';
 import { ScanLine } from '@/components/ScanLine';
 import { NeuralCircuit } from '@/components/NeuralCircuit';
-import { FullScreenTransition } from '@/components/FullScreenTransition';
+import { DigitalRainTransition } from '@/components/transitions/DigitalRainTransition';
+import { CircleWaveTransition } from '@/components/transitions/CircleWaveTransition';
+import { GridPulseTransition } from '@/components/transitions/GridPulseTransition';
+import { ScanLineTransition } from '@/components/transitions/ScanLineTransition';
+import { ParticleExplosion } from '@/components/transitions/ParticleExplosion';
 
 type Stage = 
   | 'preBoot' 
@@ -86,8 +90,8 @@ const Index = () => {
     setTimeout(() => {
       setShowAnimation(false);
       setStage('calibration2');
-      setShowTyping(true); // Keep typing state true
-    }, 2000);
+      setShowTyping(true);
+    }, 1000);
   };
 
   const handleCalibration2Submit = () => {
@@ -95,8 +99,8 @@ const Index = () => {
     setTimeout(() => {
       setShowAnimation(false);
       setStage('cognition1');
-      setShowTyping(true); // Keep typing state true
-    }, 2000);
+      setShowTyping(true);
+    }, 1000);
   };
 
   const handleCognition1Submit = () => {
@@ -104,8 +108,8 @@ const Index = () => {
     setTimeout(() => {
       setShowAnimation(false);
       setStage('cognition2');
-      setShowTyping(true); // Keep typing state true
-    }, 2000);
+      setShowTyping(true);
+    }, 1000);
   };
 
   const handleCognition2Submit = () => {
@@ -113,8 +117,8 @@ const Index = () => {
     setTimeout(() => {
       setShowAnimation(false);
       setStage('commitment');
-      setShowTyping(true); // Keep typing state true
-    }, 2000);
+      setShowTyping(true);
+    }, 1000);
   };
 
   const handleCommitmentSubmit = () => {
@@ -122,8 +126,8 @@ const Index = () => {
     setTimeout(() => {
       setShowAnimation(false);
       setStage('contact');
-      setShowTyping(true); // Keep typing state true
-    }, 1500);
+      setShowTyping(true);
+    }, 1000);
   };
 
   const handleContactSubmit = () => {
@@ -387,7 +391,7 @@ const Index = () => {
                 </>
               )}
               <AnimatePresence>
-                {showAnimation && <FullScreenTransition />}
+                {showAnimation && <DigitalRainTransition />}
               </AnimatePresence>
             </motion.div>
           )}
@@ -425,7 +429,7 @@ const Index = () => {
                 </>
               )}
               <AnimatePresence>
-                {showAnimation && <FullScreenTransition />}
+                {showAnimation && <CircleWaveTransition />}
               </AnimatePresence>
             </motion.div>
           )}
@@ -453,7 +457,7 @@ const Index = () => {
                 </CyberButton>
               </div>
               <AnimatePresence>
-                {showAnimation && <FullScreenTransition />}
+                {showAnimation && <GridPulseTransition />}
               </AnimatePresence>
             </motion.div>
           )}
@@ -481,7 +485,7 @@ const Index = () => {
                 </CyberButton>
               </div>
               <AnimatePresence>
-                {showAnimation && <FullScreenTransition />}
+                {showAnimation && <ScanLineTransition />}
               </AnimatePresence>
             </motion.div>
           )}
@@ -523,7 +527,7 @@ const Index = () => {
                 </CyberButton>
               </div>
               <AnimatePresence>
-                {showAnimation && <FullScreenTransition />}
+                {showAnimation && <ParticleExplosion />}
               </AnimatePresence>
             </motion.div>
           )}
