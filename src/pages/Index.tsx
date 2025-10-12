@@ -84,7 +84,7 @@ const Index = () => {
     setTimeout(() => {
       setShowAnimation(false);
       setStage('calibration2');
-      setShowTyping(false);
+      setShowTyping(true); // Keep typing state true
     }, 2000);
   };
 
@@ -93,7 +93,7 @@ const Index = () => {
     setTimeout(() => {
       setShowAnimation(false);
       setStage('cognition1');
-      setShowTyping(false);
+      setShowTyping(true); // Keep typing state true
     }, 2000);
   };
 
@@ -102,7 +102,7 @@ const Index = () => {
     setTimeout(() => {
       setShowAnimation(false);
       setStage('cognition2');
-      setShowTyping(false);
+      setShowTyping(true); // Keep typing state true
     }, 2000);
   };
 
@@ -111,7 +111,7 @@ const Index = () => {
     setTimeout(() => {
       setShowAnimation(false);
       setStage('commitment');
-      setShowTyping(false);
+      setShowTyping(true); // Keep typing state true
     }, 2000);
   };
 
@@ -120,7 +120,7 @@ const Index = () => {
     setTimeout(() => {
       setShowAnimation(false);
       setStage('contact');
-      setShowTyping(false);
+      setShowTyping(true); // Keep typing state true
     }, 1500);
   };
 
@@ -308,9 +308,7 @@ const Index = () => {
               animate={{ opacity: 1 }}
               className="space-y-8"
             >
-              {!showTyping ? (
-                <div className="min-h-[100px]" />
-              ) : (
+              {showTyping && (
                 <>
                   <TypingText
                     text="On a scale of 0–10: how often do you fail to finish what you start?"
