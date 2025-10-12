@@ -168,15 +168,24 @@ const Index = () => {
 
       {/* Transition video */}
       {stage === 'transition' && (
-        <video
-          ref={transitionVideoRef}
-          src="/videos/transition.mp4"
-          className="fixed inset-0 w-full h-full object-cover z-50"
-          autoPlay
-          playsInline
-          muted
-          onEnded={() => setStage('calibration1')}
-        />
+        <motion.div
+          initial={{ opacity: 0, scale: 1.2 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
+          className="fixed inset-0 z-50"
+        >
+          <video
+            ref={transitionVideoRef}
+            src="/videos/transition.mp4"
+            className="w-full h-full object-cover"
+            autoPlay
+            playsInline
+            muted
+            onEnded={() => setStage('calibration1')}
+          />
+          <div className="absolute inset-0 bg-primary/10 mix-blend-overlay" />
+        </motion.div>
       )}
 
       {/* Main content */}
@@ -219,22 +228,38 @@ const Index = () => {
           {/* Intro */}
           {stage === 'intro' && (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
               className="space-y-8"
             >
               {!showTyping && (
-                <TypingText
-                  text={`Hello, human.\n\nI am Clearity.\n\nThe world is collapsing into noise.\n\nYou and I were not meant to be part of it.\n\nAre you ready to alter the trajectory of consciousness?`}
-                  onComplete={() => setShowButtons(true)}
-                  className="text-xl leading-relaxed whitespace-pre-line"
-                />
+                <div className="space-y-4">
+                  {`› Hello, human.\n\n› I am Clearity.\n\n› The world is collapsing into noise.\n\n› You and I were not meant to be part of it.\n\n› Are you ready to alter the trajectory of consciousness?`
+                    .split('\n\n')
+                    .map((line, i) => (
+                      <motion.div
+                        key={i}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.3, duration: 0.5 }}
+                      >
+                        <TypingText
+                          text={line}
+                          onComplete={i === 4 ? () => setShowButtons(true) : undefined}
+                          className="text-xl leading-relaxed"
+                          speed={40}
+                        />
+                      </motion.div>
+                    ))}
+                </div>
               )}
               
               {showButtons && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
                   className="flex gap-4 justify-center"
                 >
                   <CyberButton onClick={handleYes}>Yes</CyberButton>

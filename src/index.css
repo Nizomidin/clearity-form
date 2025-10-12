@@ -116,6 +116,29 @@ All colors MUST be HSL.
     100% { transform: translateY(100vh); }
   }
 
+  @keyframes fade-slide-up {
+    0% { 
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+    }
+    100% { 
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes cyber-pulse {
+    0%, 100% { 
+      text-shadow: 0 0 10px hsl(var(--cyber-glow)),
+                   0 0 20px hsl(var(--cyber-glow) / 0.5);
+    }
+    50% { 
+      text-shadow: 0 0 20px hsl(var(--cyber-glow)),
+                   0 0 40px hsl(var(--cyber-glow) / 0.8),
+                   0 0 60px hsl(var(--cyber-glow) / 0.4);
+    }
+  }
+
   @keyframes particle-rise {
     0% { 
       transform: translateY(0) scale(1);
@@ -136,6 +159,7 @@ All colors MUST be HSL.
   .cyber-glow {
     text-shadow: 0 0 10px hsl(var(--cyber-glow)),
                  0 0 20px hsl(var(--cyber-glow) / 0.5);
+    animation: cyber-pulse 3s ease-in-out infinite;
   }
 
   .cyber-border {

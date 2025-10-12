@@ -28,8 +28,9 @@ export const TypingText = ({ text, onComplete, speed = 30, className = '' }: Typ
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className={`terminal-text ${className}`}
+      className={`terminal-text text-primary cyber-glow ${className}`}
     >
+      <span className="text-primary/60 mr-2">›</span>
       {displayedText}
       {currentIndex < text.length && (
         <span className="inline-block w-2 h-4 ml-1 bg-primary animate-pulse" />

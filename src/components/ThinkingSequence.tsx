@@ -32,8 +32,9 @@ export const ThinkingSequence = ({ lines, onComplete, speed = 1500 }: ThinkingSe
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
-            className="terminal-text text-muted-foreground text-sm"
+            className="terminal-text text-primary text-sm"
           >
+            <span className="text-primary/60 mr-2">›</span>
             {lines[currentLine]}
             <span className="inline-block w-1.5 h-3 ml-1 bg-primary animate-pulse" />
           </motion.div>
