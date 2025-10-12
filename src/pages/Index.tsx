@@ -165,44 +165,39 @@ const Index = () => {
         }} />
       </div>
 
-      {/* Animated scanlines */}
+      {/* Single animated scanline */}
       <div className="absolute inset-0 pointer-events-none opacity-10">
-        {[...Array(3)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-full h-px bg-gradient-to-r from-transparent via-primary to-transparent"
-            initial={{ top: '-2px' }}
-            animate={{ top: '100%' }}
-            transition={{
-              duration: 8 + i * 2,
-              repeat: Infinity,
-              ease: 'linear',
-              delay: i * 2
-            }}
-          />
-        ))}
+        <motion.div
+          className="absolute w-full h-px bg-gradient-to-r from-transparent via-primary to-transparent"
+          initial={{ top: '-2px' }}
+          animate={{ top: '100%' }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            ease: 'linear'
+          }}
+        />
       </div>
 
-      {/* Floating particles */}
-      <div className="absolute inset-0 opacity-30 pointer-events-none">
-        {Array.from({ length: 80 }).map((_, i) => (
+      {/* Minimal floating particles */}
+      <div className="absolute inset-0 opacity-20 pointer-events-none">
+        {Array.from({ length: 20 }).map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-1 h-1 bg-primary rounded-full"
+            className="absolute w-0.5 h-0.5 bg-primary"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
             }}
             animate={{
-              y: [0, -100],
-              opacity: [0, 1, 0],
-              scale: [0, 1, 0]
+              y: [0, -150],
+              opacity: [0, 0.8, 0],
             }}
             transition={{
-              duration: 4 + Math.random() * 4,
+              duration: 6,
               repeat: Infinity,
-              delay: Math.random() * 5,
-              ease: 'easeInOut'
+              delay: Math.random() * 6,
+              ease: 'linear'
             }}
           />
         ))}
@@ -214,19 +209,19 @@ const Index = () => {
       <div className="absolute bottom-0 left-0 w-32 h-32 border-l-2 border-b-2 border-primary opacity-30" />
       <div className="absolute bottom-0 right-0 w-32 h-32 border-r-2 border-b-2 border-primary opacity-30" />
 
-      {/* Glitch overlay */}
+      {/* Subtle glitch overlay */}
       <motion.div
         className="absolute inset-0 pointer-events-none mix-blend-overlay"
         animate={{
-          opacity: [0, 0.1, 0],
+          opacity: [0, 0.05, 0],
         }}
         transition={{
           duration: 0.1,
           repeat: Infinity,
-          repeatDelay: 5 + Math.random() * 10
+          repeatDelay: 8
         }}
         style={{
-          background: 'linear-gradient(90deg, transparent 0%, hsl(var(--primary) / 0.3) 50%, transparent 100%)'
+          background: 'linear-gradient(90deg, transparent 0%, hsl(var(--primary) / 0.2) 50%, transparent 100%)'
         }}
       />
 
@@ -313,19 +308,19 @@ const Index = () => {
                   'Are you ready to alter the trajectory of consciousness?'
                 ].map((line, i) => (
                   i <= currentIntroLine && (
-                    <TypingText
-                      key={i}
-                      text={line}
-                      onComplete={() => {
-                        if (i < 4) {
-                          setTimeout(() => setCurrentIntroLine(i + 1), 300);
-                        } else {
-                          setTimeout(() => setShowButtons(true), 300);
-                        }
-                      }}
-                      className="text-xl leading-relaxed"
-                      speed={50}
-                    />
+                     <TypingText
+                       key={i}
+                       text={line}
+                       onComplete={() => {
+                         if (i < 4) {
+                           setTimeout(() => setCurrentIntroLine(i + 1), 500);
+                         } else {
+                           setTimeout(() => setShowButtons(true), 500);
+                         }
+                       }}
+                       className="text-xl leading-relaxed"
+                       speed={70}
+                     />
                   )
                 ))}
               </div>
@@ -466,7 +461,7 @@ const Index = () => {
                 </CyberButton>
               </div>
               <AnimatePresence>
-                {showAnimation && <MatrixRainTransition />}
+                {showAnimation && <ScanLine />}
               </AnimatePresence>
             </motion.div>
           )}
@@ -494,7 +489,7 @@ const Index = () => {
                 </CyberButton>
               </div>
               <AnimatePresence>
-                {showAnimation && <HexagonWaveTransition />}
+                {showAnimation && <NeuralPulse />}
               </AnimatePresence>
             </motion.div>
           )}
@@ -539,7 +534,7 @@ const Index = () => {
                 </CyberButton>
               </div>
               <AnimatePresence>
-                {showAnimation && <DataStreamTransition />}
+                {showAnimation && <GeometricCube />}
               </AnimatePresence>
             </motion.div>
           )}
@@ -582,7 +577,7 @@ const Index = () => {
                 </CyberButton>
               </div>
               <AnimatePresence>
-                {showAnimation && <CircuitBoardTransition />}
+                {showAnimation && <NeuralCircuit />}
               </AnimatePresence>
             </motion.div>
           )}
@@ -606,42 +601,18 @@ const Index = () => {
               animate={{ opacity: 1 }}
               className="space-y-12 text-center relative"
             >
-              {/* Ambient digital mist particles */}
-              <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                {[...Array(30)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute w-px h-32 bg-gradient-to-b from-transparent via-primary/30 to-transparent"
-                    style={{
-                      left: `${Math.random() * 100}%`,
-                      top: `${Math.random() * 100}%`,
-                    }}
-                    animate={{
-                      y: [-50, 100],
-                      opacity: [0, 0.6, 0],
-                    }}
-                    transition={{
-                      duration: 8 + Math.random() * 4,
-                      repeat: Infinity,
-                      delay: Math.random() * 8,
-                      ease: 'linear'
-                    }}
-                  />
-                ))}
-              </div>
-
-              {/* Holographic noise around video */}
+              {/* Minimal ambient glow */}
               <motion.div
-                className="absolute -inset-4 rounded-full pointer-events-none"
+                className="absolute -inset-8 rounded-full pointer-events-none"
                 animate={{
                   boxShadow: [
-                    '0 0 40px hsl(var(--primary) / 0.2)',
-                    '0 0 80px hsl(var(--primary) / 0.4)',
-                    '0 0 40px hsl(var(--primary) / 0.2)',
+                    '0 0 30px hsl(var(--primary) / 0.15)',
+                    '0 0 50px hsl(var(--primary) / 0.25)',
+                    '0 0 30px hsl(var(--primary) / 0.15)',
                   ],
                 }}
                 transition={{
-                  duration: 4,
+                  duration: 5,
                   repeat: Infinity,
                   ease: 'easeInOut'
                 }}
