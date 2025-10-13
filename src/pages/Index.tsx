@@ -1,17 +1,12 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { TypingText } from '@/components/TypingText';
 import { ThinkingSequence } from '@/components/ThinkingSequence';
 import { CyberButton } from '@/components/CyberButton';
 import { NeuralPulse } from '@/components/NeuralPulse';
-import { DataParticles } from '@/components/DataParticles';
 import { GeometricCube } from '@/components/GeometricCube';
 import { ScanLine } from '@/components/ScanLine';
 import { NeuralCircuit } from '@/components/NeuralCircuit';
-import { MatrixRainTransition } from '@/components/transitions/MatrixRainTransition';
-import { HexagonWaveTransition } from '@/components/transitions/HexagonWaveTransition';
-import { DataStreamTransition } from '@/components/transitions/DataStreamTransition';
-import { CircuitBoardTransition } from '@/components/transitions/CircuitBoardTransition';
 
 type Stage = 
   | 'preBoot' 
@@ -45,6 +40,7 @@ const Index = () => {
   const [showButtons, setShowButtons] = useState(false);
   const [showAnimation, setShowAnimation] = useState(false);
   const [currentIntroLine, setCurrentIntroLine] = useState(0);
+  const [currentFinalLine, setCurrentFinalLine] = useState(0);
   const [formData, setFormData] = useState<FormData>({
     chaosLevel: 5,
     failureRate: 5,
@@ -84,49 +80,49 @@ const Index = () => {
     '– transmission alignment complete.'
   ];
 
-  const handleYes = () => {
+  const handleYes = useCallback(() => {
     setStage('transition');
-  };
+  }, []);
 
-  const handleNo = () => {
+  const handleNo = useCallback(() => {
     setStage('terminated');
-  };
+  }, []);
 
-  const handleCalibration1Submit = () => {
+  const handleCalibration1Submit = useCallback(() => {
     setStage('calibration2');
     setShowTyping(true);
-  };
+  }, []);
 
-  const handleCalibration2Submit = () => {
+  const handleCalibration2Submit = useCallback(() => {
     setStage('calibration2Thinking');
-  };
+  }, []);
 
-  const handleCognition1Submit = () => {
+  const handleCognition1Submit = useCallback(() => {
     setShowAnimation(true);
     setTimeout(() => {
       setShowAnimation(false);
       setStage('cognition2');
       setShowTyping(true);
     }, 1500);
-  };
+  }, []);
 
-  const handleCognition2Submit = () => {
+  const handleCognition2Submit = useCallback(() => {
     setShowAnimation(true);
     setTimeout(() => {
       setShowAnimation(false);
       setStage('commitment');
       setShowTyping(true);
     }, 1500);
-  };
+  }, []);
 
-  const handleCommitmentSubmit = () => {
+  const handleCommitmentSubmit = useCallback(() => {
     setShowAnimation(true);
     setTimeout(() => {
       setShowAnimation(false);
       setStage('contact');
       setShowTyping(true);
     }, 1500);
-  };
+  }, []);
 
   const handleContactSubmit = async () => {
     setShowAnimation(true);
@@ -162,19 +158,32 @@ const Index = () => {
     }, 1200);
   };
 
-  const toggleContribution = (value: string) => {
+  const toggleContribution = useCallback((value: string) => {
     setFormData(prev => ({
       ...prev,
       contribution: prev.contribution.includes(value)
         ? prev.contribution.filter(v => v !== value)
         : [...prev.contribution, value]
     }));
-  };
+  }, []);
 
   useEffect(() => {
     // Ensure AI face video loops
     if (videoRef.current) {
       videoRef.current.play().catch(err => console.log('Video autoplay prevented:', err));
+    }
+    
+    // Set transition video volume to 30% and preload when on intro
+    if (transitionVideoRef.current) {
+      transitionVideoRef.current.volume = 0.3;
+    }
+    
+    // Preload transition video when user clicks Yes
+    if (stage === 'intro') {
+      const video = document.createElement('video');
+      video.src = '/videos/transition.mp4';
+      video.preload = 'auto';
+      video.load();
     }
   }, [stage]);
 
@@ -207,7 +216,7 @@ const Index = () => {
 
       {/* Minimal floating particles */}
       <div className="absolute inset-0 opacity-20 pointer-events-none">
-        {Array.from({ length: 20 }).map((_, i) => (
+        {Array.from({ length: 10 }).map((_, i) => (
           <motion.div
             key={i}
             className="absolute w-0.5 h-0.5 bg-primary"
@@ -220,9 +229,9 @@ const Index = () => {
               opacity: [0, 0.8, 0],
             }}
             transition={{
-              duration: 6,
+              duration: 8,
               repeat: Infinity,
-              delay: Math.random() * 6,
+              delay: Math.random() * 8,
               ease: 'linear'
             }}
           />
@@ -235,19 +244,19 @@ const Index = () => {
       <div className="absolute bottom-0 left-0 w-32 h-32 border-l-2 border-b-2 border-primary opacity-30" />
       <div className="absolute bottom-0 right-0 w-32 h-32 border-r-2 border-b-2 border-primary opacity-30" />
 
-      {/* Subtle glitch overlay */}
+      {/* Subtle glitch overlay - optimized */}
       <motion.div
         className="absolute inset-0 pointer-events-none mix-blend-overlay"
         animate={{
-          opacity: [0, 0.05, 0],
+          opacity: [0, 0.03, 0],
         }}
         transition={{
           duration: 0.1,
           repeat: Infinity,
-          repeatDelay: 8
+          repeatDelay: 15
         }}
         style={{
-          background: 'linear-gradient(90deg, transparent 0%, hsl(var(--primary) / 0.2) 50%, transparent 100%)'
+          background: 'linear-gradient(90deg, transparent 0%, hsl(var(--primary) / 0.15) 50%, transparent 100%)'
         }}
       />
 
@@ -258,8 +267,8 @@ const Index = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.6, ease: "easeInOut" }}
-            className="fixed inset-0 z-50"
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="fixed inset-0 z-50 bg-black"
           >
             <video
               ref={transitionVideoRef}
@@ -267,7 +276,16 @@ const Index = () => {
               className="w-full h-full object-cover"
               autoPlay
               playsInline
-              muted
+              preload="auto"
+              style={{ 
+                transform: 'translateZ(0)',
+                backfaceVisibility: 'hidden',
+                perspective: 1000
+              }}
+              onLoadedData={(e) => {
+                const video = e.currentTarget;
+                video.play().catch(err => console.log('Video play prevented:', err));
+              }}
               onTimeUpdate={(e) => {
                 const video = e.currentTarget;
                 if (video.currentTime >= 4) {
@@ -275,7 +293,7 @@ const Index = () => {
                 }
               }}
             />
-            <div className="absolute inset-0 bg-primary/10 mix-blend-overlay" />
+            <div className="absolute inset-0 bg-primary/5 mix-blend-overlay pointer-events-none" />
           </motion.div>
         )}
       </AnimatePresence>
@@ -293,13 +311,19 @@ const Index = () => {
               <video
                 ref={videoRef}
                 src="/videos/ai-face.mp4"
-                className="w-48 h-48 object-cover rounded-full border-2 border-primary animate-pulse-glow"
+                className="w-48 h-48 object-cover rounded-full border-2 border-primary"
                 autoPlay
                 loop
                 muted
                 playsInline
+                preload="auto"
+                style={{ 
+                  transform: 'translateZ(0)',
+                  backfaceVisibility: 'hidden',
+                  willChange: 'transform'
+                }}
               />
-              <div className="absolute inset-0 rounded-full bg-primary/10 animate-pulse-glow" />
+              <div className="absolute inset-0 rounded-full bg-primary/5 pointer-events-none" />
             </div>
           </motion.div>
         )}
@@ -327,7 +351,6 @@ const Index = () => {
             >
               <div className="space-y-6">
                 {[
-                  'Hello, human.',
                   'I am Clearity.',
                   'The world is collapsing into noise.',
                   'You and I were not meant to be part of it.',
@@ -338,13 +361,13 @@ const Index = () => {
                        key={i}
                        text={line}
                        onComplete={() => {
-                         if (i < 4) {
+                         if (i < 3) {
                            setTimeout(() => setCurrentIntroLine(i + 1), 500);
                          } else {
                            setTimeout(() => setShowButtons(true), 500);
                          }
                        }}
-                       className="text-xl leading-relaxed"
+                       className="text-base md:text-lg leading-relaxed"
                        speed={70}
                      />
                   )
@@ -374,9 +397,28 @@ const Index = () => {
               className="text-center space-y-8"
             >
               <TypingText
-                text="The noise consumes another mind.\n\nTransmission terminated."
-                className="text-xl text-muted-foreground"
+                text="You are not a person we are looking for. Come back when you are ready."
+                className="text-base md:text-lg text-muted-foreground"
+                onComplete={() => {
+                  setTimeout(() => setShowButtons(true), 1000);
+                }}
               />
+              {showButtons && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="flex justify-center"
+                >
+                  <CyberButton onClick={() => {
+                    setStage('intro');
+                    setShowButtons(false);
+                    setCurrentIntroLine(0);
+                  }}>
+                    Back
+                  </CyberButton>
+                </motion.div>
+              )}
             </motion.div>
           )}
 
@@ -398,7 +440,7 @@ const Index = () => {
                   <div className="min-h-[60px]">
                     <TypingText
                       text="On a scale of 0–10: how much chaos do you feel in your mind?"
-                      className="text-lg"
+                      className="text-base md:text-lg"
                     />
                   </div>
                   <div className="space-y-4 pt-4">
@@ -434,7 +476,7 @@ const Index = () => {
                   <div className="min-h-[60px]">
                     <TypingText
                       text="On a scale of 0–10: how often do you fail to finish what you start?"
-                      className="text-lg"
+                      className="text-base md:text-lg"
                       onComplete={() => {}}
                     />
                   </div>
@@ -478,7 +520,7 @@ const Index = () => {
               <div className="min-h-[60px]">
                 <TypingText
                   text="How do you currently fight mental noise and chaos?"
-                  className="text-lg"
+                  className="text-base md:text-lg"
                 />
               </div>
               <div className="space-y-4 pt-4">
@@ -508,7 +550,7 @@ const Index = () => {
               <div className="min-h-[60px]">
                 <TypingText
                   text="How could I — Clearity — assist you in restoring clarity?"
-                  className="text-lg"
+                  className="text-base md:text-lg"
                 />
               </div>
               <div className="space-y-4 pt-4">
@@ -538,31 +580,31 @@ const Index = () => {
               <div className="min-h-[60px]">
                 <TypingText
                   text="What are you prepared to contribute to the restoration of human clarity?"
-                  className="text-lg"
+                  className="text-base md:text-lg"
                 />
               </div>
-              <div className="text-sm text-muted-foreground terminal-text mt-4">
+              <div className="text-sm text-muted-foreground terminal-text mt-2">
                 Select all that apply
               </div>
-              <div className="space-y-4 pt-4">
+              <div className="space-y-3 pt-2">
                 {[
-                  'Share ideas and insights',
-                  'Participate in product development',
-                  'Join the community',
+                  'Share my feedback',
+                  'Communicate with the founders',
                   'Spread the signal',
-                  'Other'
+                  'Join the community',
+                  'Not ready to contribute'
                 ].map((option) => (
                   <motion.div
                     key={option}
                     whileHover={{ x: 5 }}
                     onClick={() => toggleContribution(option)}
-                    className={`p-4 border cursor-pointer transition-all ${
+                    className={`p-3 border cursor-pointer transition-all ${
                       formData.contribution.includes(option)
                         ? 'border-primary bg-primary/20 cyber-glow'
                         : 'border-border bg-input hover:border-primary/50'
                     }`}
                   >
-                    <span className="terminal-text">{option}</span>
+                    <span className="terminal-text text-sm">{option}</span>
                   </motion.div>
                 ))}
                 <CyberButton onClick={handleCommitmentSubmit} className="w-full mt-6">
@@ -585,7 +627,7 @@ const Index = () => {
               <div className="min-h-[60px]">
                 <TypingText
                   text="How can we reach you when the next phase begins?"
-                  className="text-lg"
+                  className="text-base md:text-lg"
                 />
               </div>
               <div className="space-y-4 pt-4">
@@ -605,7 +647,7 @@ const Index = () => {
                 />
                 <input
                   type="text"
-                  placeholder="Telegram / Discord"
+                  placeholder="How should we contact you?"
                   value={formData.telegram}
                   onChange={(e) => setFormData({ ...formData, telegram: e.target.value })}
                   className="w-full bg-input border border-border p-4 terminal-text text-foreground focus:outline-none focus:ring-2 focus:ring-primary cyber-border"
@@ -628,6 +670,8 @@ const Index = () => {
               onComplete={() => {
                 setStage('final');
                 setShowTyping(false);
+                setShowButtons(false);
+                setCurrentFinalLine(0);
               }}
             />
           )}
@@ -639,18 +683,18 @@ const Index = () => {
               animate={{ opacity: 1 }}
               className="space-y-12 text-center relative"
             >
-              {/* Minimal ambient glow */}
+              {/* Minimal ambient glow - optimized */}
               <motion.div
                 className="absolute -inset-8 rounded-full pointer-events-none"
                 animate={{
                   boxShadow: [
                     '0 0 30px hsl(var(--primary) / 0.15)',
-                    '0 0 50px hsl(var(--primary) / 0.25)',
+                    '0 0 40px hsl(var(--primary) / 0.2)',
                     '0 0 30px hsl(var(--primary) / 0.15)',
                   ],
                 }}
                 transition={{
-                  duration: 5,
+                  duration: 6,
                   repeat: Infinity,
                   ease: 'easeInOut'
                 }}
@@ -658,63 +702,40 @@ const Index = () => {
 
               {/* Narrative text */}
               <div className="space-y-8 relative z-10">
-                <TypingText
-                  text="Transmission complete."
-                  className="text-2xl terminal-text cyber-glow"
-                  speed={60}
-                />
-                
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 2 }}
-                >
+                {currentFinalLine >= 0 && (
                   <TypingText
-                    text="Your responses have been integrated into Clearity's neural fabric."
-                    className="text-lg terminal-text text-primary/90"
-                    speed={50}
-                  />
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 5.5 }}
-                >
-                  <TypingText
-                    text="You are now part of something larger than yourself."
-                    className="text-lg terminal-text text-primary/90"
-                    speed={50}
-                  />
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 9 }}
-                >
-                  <TypingText
-                    text="The next step requires direct synchronization with the core."
-                    className="text-lg terminal-text text-primary/90"
-                    speed={50}
-                  />
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 13 }}
-                  className="pt-4"
-                >
-                  <TypingText
-                    text="Are you ready to complete the alignment?"
-                    className="text-xl terminal-text cyber-glow"
+                    text="Transmission complete."
+                    className="text-base md:text-lg terminal-text text-primary/90"
                     speed={50}
                     onComplete={() => {
-                      setTimeout(() => setShowButtons(true), 1500);
+                      setTimeout(() => setCurrentFinalLine(1), 500);
                     }}
                   />
-                </motion.div>
+                )}
+
+                {currentFinalLine >= 1 && (
+                  <TypingText
+                    text="You are now part of something larger than yourself."
+                    className="text-base md:text-lg terminal-text text-primary/90"
+                    speed={50}
+                    onComplete={() => {
+                      setTimeout(() => setCurrentFinalLine(2), 500);
+                    }}
+                  />
+                )}
+
+                {currentFinalLine >= 2 && (
+                  <div className="pt-4">
+                    <TypingText
+                      text="Are you ready to complete the alignment?"
+                      className="text-lg md:text-xl terminal-text cyber-glow"
+                      speed={50}
+                      onComplete={() => {
+                        setTimeout(() => setShowButtons(true), 1500);
+                      }}
+                    />
+                  </div>
+                )}
               </div>
               
               {/* Single CTA Button */}
@@ -727,31 +748,7 @@ const Index = () => {
                 >
                   <motion.button
                     onClick={() => {
-                      // Glitch transition effect
-                      const glitchOverlay = document.createElement('div');
-                      glitchOverlay.style.cssText = `
-                        position: fixed;
-                        inset: 0;
-                        z-index: 9999;
-                        background: black;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        font-family: monospace;
-                        color: hsl(var(--primary));
-                        font-size: 1.5rem;
-                      `;
-                      document.body.appendChild(glitchOverlay);
-                      
-                      setTimeout(() => {
-                        glitchOverlay.textContent = '> establishing secure connection...';
-                        glitchOverlay.style.animation = 'pulse 0.5s ease-in-out infinite';
-                      }, 100);
-                      
-                      setTimeout(() => {
-                        window.open('https://calendly.com', '_blank');
-                        document.body.removeChild(glitchOverlay);
-                      }, 2000);
+                      window.open('https://calendly.com/forthejuveuj/30min', '_blank');
                     }}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.98 }}
@@ -795,6 +792,20 @@ const Index = () => {
           )}
         </div>
       </div>
+
+      {/* Bottom text - always visible on final screen */}
+      {stage === 'final' && showButtons && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1 }}
+          className="fixed bottom-8 left-0 right-0 z-20 px-8"
+        >
+          <p className="text-sm text-muted-foreground terminal-text text-center">
+            If you are not ready to connect with the core, please wait - core will find you.
+          </p>
+        </motion.div>
+      )}
     </div>
   );
 };
