@@ -255,13 +255,13 @@ const Index = () => {
       </AnimatePresence>
 
       {/* Main content */}
-      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center p-8">
+      <div className="relative z-10 min-h-screen flex flex-col items-center p-8 pt-24">
         {/* AI Face Video - always visible except during transition and terminated */}
         {stage !== 'transition' && stage !== 'terminated' && stage !== 'preBoot' && stage !== 'final' && (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="mb-12"
+            className="mb-12 flex-shrink-0"
           >
             <div className="relative">
               <video
@@ -279,7 +279,7 @@ const Index = () => {
         )}
 
         {/* Content area */}
-        <div className="w-full max-w-2xl">
+        <div className="w-full max-w-2xl flex-shrink-0">
           {/* Pre-boot sequence */}
           {stage === 'preBoot' && (
             <ThinkingSequence
@@ -369,10 +369,12 @@ const Index = () => {
                 />
               ) : (
                 <>
-                  <TypingText
-                    text="On a scale of 0–10: how much chaos do you feel in your mind?"
-                    className="text-lg"
-                  />
+                  <div className="min-h-[60px]">
+                    <TypingText
+                      text="On a scale of 0–10: how much chaos do you feel in your mind?"
+                      className="text-lg"
+                    />
+                  </div>
                   <div className="space-y-4 pt-4">
                     <input
                       type="range"
@@ -403,11 +405,13 @@ const Index = () => {
             >
               {showTyping && (
                 <>
-                  <TypingText
-                    text="On a scale of 0–10: how often do you fail to finish what you start?"
-                    className="text-lg"
-                    onComplete={() => {}}
-                  />
+                  <div className="min-h-[60px]">
+                    <TypingText
+                      text="On a scale of 0–10: how often do you fail to finish what you start?"
+                      className="text-lg"
+                      onComplete={() => {}}
+                    />
+                  </div>
                   <div className="space-y-4 pt-4">
                     <input
                       type="range"
@@ -445,10 +449,12 @@ const Index = () => {
               animate={{ opacity: 1 }}
               className="space-y-8"
             >
-              <TypingText
-                text="How do you currently fight mental noise and chaos?"
-                className="text-lg"
-              />
+              <div className="min-h-[60px]">
+                <TypingText
+                  text="How do you currently fight mental noise and chaos?"
+                  className="text-lg"
+                />
+              </div>
               <div className="space-y-4 pt-4">
                 <textarea
                   value={formData.fightNoise}
@@ -473,10 +479,12 @@ const Index = () => {
               animate={{ opacity: 1 }}
               className="space-y-8"
             >
-              <TypingText
-                text="How could I — Clearity — assist you in restoring clarity?"
-                className="text-lg"
-              />
+              <div className="min-h-[60px]">
+                <TypingText
+                  text="How could I — Clearity — assist you in restoring clarity?"
+                  className="text-lg"
+                />
+              </div>
               <div className="space-y-4 pt-4">
                 <textarea
                   value={formData.assistance}
@@ -501,10 +509,12 @@ const Index = () => {
               animate={{ opacity: 1 }}
               className="space-y-8"
             >
-              <TypingText
-                text="What are you prepared to contribute to the restoration of human clarity?"
-                className="text-lg"
-              />
+              <div className="min-h-[60px]">
+                <TypingText
+                  text="What are you prepared to contribute to the restoration of human clarity?"
+                  className="text-lg"
+                />
+              </div>
               <div className="text-sm text-muted-foreground terminal-text mt-4">
                 Select all that apply
               </div>
@@ -546,10 +556,12 @@ const Index = () => {
               animate={{ opacity: 1 }}
               className="space-y-8"
             >
-              <TypingText
-                text="How can we reach you when the next phase begins?"
-                className="text-lg"
-              />
+              <div className="min-h-[60px]">
+                <TypingText
+                  text="How can we reach you when the next phase begins?"
+                  className="text-lg"
+                />
+              </div>
               <div className="space-y-4 pt-4">
                 <input
                   type="text"
