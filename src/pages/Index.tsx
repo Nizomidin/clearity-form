@@ -128,8 +128,34 @@ const Index = () => {
     }, 1500);
   };
 
-  const handleContactSubmit = () => {
+  const handleContactSubmit = async () => {
     setShowAnimation(true);
+    
+    // Send data to analytics
+    try {
+      const analyticsEndpoint = import.meta.env.VITE_ANALYTICS_ENDPOINT;
+      
+      if (analyticsEndpoint) {
+        const analyticsData = {
+          ...formData,
+          timestamp: new Date().toISOString(),
+          userAgent: navigator.userAgent
+        };
+        
+        await fetch(analyticsEndpoint, {
+          method: 'POST',
+          mode: 'no-cors', // Required for Google Apps Script
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(analyticsData)
+        });
+      }
+    } catch (error) {
+      console.error('Analytics error:', error);
+      // Don't block the user flow if analytics fails
+    }
+    
     setTimeout(() => {
       setShowAnimation(false);
       setStage('finalThinking');

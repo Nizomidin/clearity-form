@@ -36,6 +36,18 @@ npm i
 npm run dev
 ```
 
+## Analytics Setup (Optional)
+
+To track form responses in Google Spreadsheet:
+
+1. See detailed instructions in [ANALYTICS_SETUP.md](./ANALYTICS_SETUP.md)
+2. Create a `.env` file in the project root:
+   ```
+   VITE_ANALYTICS_ENDPOINT=your_google_apps_script_url_here
+   ```
+3. Follow the setup guide to deploy the Google Apps Script
+4. Restart your dev server after adding the `.env` file
+
 **Edit a file directly in GitHub**
 
 - Navigate to the desired file(s).
