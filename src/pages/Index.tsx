@@ -85,7 +85,15 @@ const Index = () => {
 
   const handleYes = useCallback(() => {
     console.log('PostHog: Capturing journey_started event');
-    posthog?.capture(ANALYTICS_EVENTS.JOURNEY_STARTED);
+    console.log('PostHog instance:', posthog);
+    console.log('PostHog is ready:', posthog?.isFeatureEnabled);
+    
+    if (posthog) {
+      posthog.capture(ANALYTICS_EVENTS.JOURNEY_STARTED);
+      console.log('Event sent to PostHog');
+    } else {
+      console.error('PostHog instance is null!');
+    }
     setStage('transition');
   }, [posthog]);
 
@@ -228,6 +236,18 @@ const Index = () => {
       video.load();
     }
   }, [stage]);
+
+  // Debug PostHog initialization
+  useEffect(() => {
+    console.log('PostHog hook - instance:', posthog);
+    if (posthog) {
+      console.log('PostHog is available!');
+      // Test a simple event
+      posthog.capture('test_event', { test: true });
+    } else {
+      console.log('PostHog not yet available...');
+    }
+  }, [posthog]);
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-background">
