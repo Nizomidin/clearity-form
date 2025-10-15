@@ -59,8 +59,7 @@ const Index = () => {
   const transitionVideoRef = useRef<HTMLVideoElement>(null);
 
   const preBootLines = [
-    '– establishing neural uplink',
-    '– synchronizing biometric pattern'
+    '– establishing neural uplink'
   ];
 
   const calibrationThinking = [
@@ -227,16 +226,20 @@ const Index = () => {
       transitionVideoRef.current.volume = 0;
     }
     
-    // Preload transition video immediately for faster transitions
-    const preloadVideo = () => {
-      const video = document.createElement('video');
-      video.src = '/videos/transition.mp4';
-      video.preload = 'metadata';
-      video.load();
-    };
-    
-    // Preload immediately on page load for faster transitions
-    preloadVideo();
+    // Preload transition video when user clicks Yes - with performance check
+    if (stage === 'intro') {
+      // Check if device can handle preloading
+      const isLowEndDevice = navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4;
+      const isSlowConnection = navigator.connection && navigator.connection.effectiveType && 
+        ['slow-2g', '2g'].includes(navigator.connection.effectiveType);
+      
+      if (!isLowEndDevice && !isSlowConnection) {
+        const video = document.createElement('video');
+        video.src = '/videos/transition.mp4';
+        video.preload = 'auto';
+        video.load();
+      }
+    }
   }, [stage]);
 
   // Debug PostHog initialization
@@ -331,7 +334,7 @@ const Index = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
             className="fixed inset-0 z-50 bg-black"
           >
             <video
@@ -399,7 +402,7 @@ const Index = () => {
           {stage === 'preBoot' && (
             <ThinkingSequence
               lines={preBootLines}
-              speed={800}
+              speed={500}
               onComplete={() => {
                 setStage('intro');
                 setShowTyping(false);
@@ -428,13 +431,13 @@ const Index = () => {
                        text={line}
                        onComplete={() => {
                          if (i < 3) {
-                           setTimeout(() => setCurrentIntroLine(i + 1), 150);
+                           setTimeout(() => setCurrentIntroLine(i + 1), 300);
                          } else {
-                           setTimeout(() => setShowButtons(true), 150);
+                           setTimeout(() => setShowButtons(true), 300);
                          }
                        }}
                        className="text-base md:text-lg leading-relaxed"
-                       speed={25}
+                       speed={40}
                      />
                   )
                 ))}
