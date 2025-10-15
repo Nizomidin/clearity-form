@@ -84,6 +84,7 @@ const Index = () => {
   ];
 
   const handleYes = useCallback(() => {
+    console.log('PostHog: Capturing journey_started event');
     posthog?.capture(ANALYTICS_EVENTS.JOURNEY_STARTED);
     setStage('transition');
   }, [posthog]);
