@@ -60,7 +60,6 @@ const Index = () => {
 
   const preBootLines = [
     '– establishing neural uplink',
-    '– decrypting consciousness signal',
     '– synchronizing biometric pattern'
   ];
 
@@ -218,23 +217,26 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
-    // Ensure AI face video loops
+    // Performance optimization: Only load videos when needed
     if (videoRef.current) {
       videoRef.current.play().catch(err => console.log('Video autoplay prevented:', err));
     }
     
-    // Set transition video volume to 30% and preload when on intro
+    // Set transition video volume to 0% (muted) and preload when on intro
     if (transitionVideoRef.current) {
-      transitionVideoRef.current.volume = 0.3;
+      transitionVideoRef.current.volume = 0;
     }
     
-    // Preload transition video when user clicks Yes
-    if (stage === 'intro') {
+    // Preload transition video immediately for faster transitions
+    const preloadVideo = () => {
       const video = document.createElement('video');
       video.src = '/videos/transition.mp4';
-      video.preload = 'auto';
+      video.preload = 'metadata';
       video.load();
-    }
+    };
+    
+    // Preload immediately on page load for faster transitions
+    preloadVideo();
   }, [stage]);
 
   // Debug PostHog initialization
@@ -276,9 +278,9 @@ const Index = () => {
         />
       </div>
 
-      {/* Minimal floating particles */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none">
-        {Array.from({ length: 10 }).map((_, i) => (
+      {/* Minimal floating particles - reduced for performance */}
+      <div className="absolute inset-0 opacity-15 pointer-events-none">
+        {Array.from({ length: 5 }).map((_, i) => (
           <motion.div
             key={i}
             className="absolute w-0.5 h-0.5 bg-primary"
@@ -287,13 +289,13 @@ const Index = () => {
               top: `${Math.random() * 100}%`,
             }}
             animate={{
-              y: [0, -150],
-              opacity: [0, 0.8, 0],
+              y: [0, -100],
+              opacity: [0, 0.6, 0],
             }}
             transition={{
-              duration: 8,
+              duration: 10,
               repeat: Infinity,
-              delay: Math.random() * 8,
+              delay: Math.random() * 10,
               ease: 'linear'
             }}
           />
@@ -306,19 +308,19 @@ const Index = () => {
       <div className="absolute bottom-0 left-0 w-32 h-32 border-l-2 border-b-2 border-primary opacity-30" />
       <div className="absolute bottom-0 right-0 w-32 h-32 border-r-2 border-b-2 border-primary opacity-30" />
 
-      {/* Subtle glitch overlay - optimized */}
+      {/* Subtle glitch overlay - optimized for performance */}
       <motion.div
         className="absolute inset-0 pointer-events-none mix-blend-overlay"
         animate={{
-          opacity: [0, 0.03, 0],
+          opacity: [0, 0.02, 0],
         }}
         transition={{
           duration: 0.1,
           repeat: Infinity,
-          repeatDelay: 15
+          repeatDelay: 20
         }}
         style={{
-          background: 'linear-gradient(90deg, transparent 0%, hsl(var(--primary) / 0.15) 50%, transparent 100%)'
+          background: 'linear-gradient(90deg, transparent 0%, hsl(var(--primary) / 0.1) 50%, transparent 100%)'
         }}
       />
 
@@ -329,7 +331,7 @@ const Index = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
             className="fixed inset-0 z-50 bg-black"
           >
             <video
@@ -337,8 +339,9 @@ const Index = () => {
               src="/videos/transition.mp4"
               className="w-full h-full object-cover"
               autoPlay
+              muted
               playsInline
-              preload="auto"
+              preload="metadata"
               style={{ 
                 transform: 'translateZ(0)',
                 backfaceVisibility: 'hidden',
@@ -378,7 +381,7 @@ const Index = () => {
                 loop
                 muted
                 playsInline
-                preload="auto"
+                preload="metadata"
                 style={{ 
                   transform: 'translateZ(0)',
                   backfaceVisibility: 'hidden',
@@ -396,6 +399,7 @@ const Index = () => {
           {stage === 'preBoot' && (
             <ThinkingSequence
               lines={preBootLines}
+              speed={800}
               onComplete={() => {
                 setStage('intro');
                 setShowTyping(false);
@@ -424,13 +428,13 @@ const Index = () => {
                        text={line}
                        onComplete={() => {
                          if (i < 3) {
-                           setTimeout(() => setCurrentIntroLine(i + 1), 500);
+                           setTimeout(() => setCurrentIntroLine(i + 1), 150);
                          } else {
-                           setTimeout(() => setShowButtons(true), 500);
+                           setTimeout(() => setShowButtons(true), 150);
                          }
                        }}
                        className="text-base md:text-lg leading-relaxed"
-                       speed={70}
+                       speed={25}
                      />
                   )
                 ))}
@@ -461,8 +465,9 @@ const Index = () => {
               <TypingText
                 text="You are not a person we are looking for. Come back when you are ready."
                 className="text-base md:text-lg text-muted-foreground"
+                speed={40}
                 onComplete={() => {
-                  setTimeout(() => setShowButtons(true), 1000);
+                  setTimeout(() => setShowButtons(true), 500);
                 }}
               />
               {showButtons && (
@@ -495,6 +500,7 @@ const Index = () => {
               {!showTyping ? (
                 <ThinkingSequence
                   lines={calibrationThinking}
+                  speed={1200}
                   onComplete={() => setShowTyping(true)}
                 />
               ) : (
@@ -503,6 +509,7 @@ const Index = () => {
                     <TypingText
                       text="On a scale of 0–10: how much chaos do you feel in your mind?"
                       className="text-base md:text-lg"
+                      speed={40}
                     />
                   </div>
                   <div className="space-y-4 pt-4">
@@ -539,6 +546,7 @@ const Index = () => {
                     <TypingText
                       text="On a scale of 0–10: how often do you fail to finish what you start?"
                       className="text-base md:text-lg"
+                      speed={40}
                       onComplete={() => {}}
                     />
                   </div>
@@ -567,7 +575,7 @@ const Index = () => {
           {stage === 'calibration2Thinking' && (
             <ThinkingSequence
               lines={calibration2Thinking}
-              speed={1800}
+              speed={1200}
               onComplete={() => setStage('cognition1')}
             />
           )}
@@ -583,6 +591,7 @@ const Index = () => {
                 <TypingText
                   text="How do you currently fight mental noise and chaos?"
                   className="text-base md:text-lg"
+                  speed={40}
                 />
               </div>
               <div className="space-y-4 pt-4">
@@ -613,6 +622,7 @@ const Index = () => {
                 <TypingText
                   text="How could I — Clearity — assist you in restoring clarity?"
                   className="text-base md:text-lg"
+                  speed={40}
                 />
               </div>
               <div className="space-y-4 pt-4">
@@ -643,6 +653,7 @@ const Index = () => {
                 <TypingText
                   text="What are you prepared to contribute to the restoration of human clarity?"
                   className="text-base md:text-lg"
+                  speed={40}
                 />
               </div>
               <div className="text-sm text-muted-foreground terminal-text mt-2">
@@ -690,6 +701,7 @@ const Index = () => {
                 <TypingText
                   text="How can we reach you when the next phase begins?"
                   className="text-base md:text-lg"
+                  speed={40}
                 />
               </div>
               <div className="space-y-4 pt-4">
@@ -701,8 +713,8 @@ const Index = () => {
                   className="w-full bg-input border border-border p-4 terminal-text text-foreground focus:outline-none focus:ring-2 focus:ring-primary cyber-border"
                 />
                 <input
-                  type="email"
-                  placeholder="Email"
+                  type="text"
+                  placeholder="WhatsApp"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   className="w-full bg-input border border-border p-4 terminal-text text-foreground focus:outline-none focus:ring-2 focus:ring-primary cyber-border"
@@ -728,7 +740,7 @@ const Index = () => {
           {stage === 'finalThinking' && (
             <ThinkingSequence
               lines={finalThinkingLines}
-              speed={1700}
+              speed={1200}
               onComplete={() => {
                 setStage('final');
                 setShowTyping(false);
@@ -745,18 +757,18 @@ const Index = () => {
               animate={{ opacity: 1 }}
               className="space-y-12 text-center relative"
             >
-              {/* Minimal ambient glow - optimized */}
+              {/* Minimal ambient glow - optimized for performance */}
               <motion.div
                 className="absolute -inset-8 rounded-full pointer-events-none"
                 animate={{
                   boxShadow: [
+                    '0 0 20px hsl(var(--primary) / 0.1)',
                     '0 0 30px hsl(var(--primary) / 0.15)',
-                    '0 0 40px hsl(var(--primary) / 0.2)',
-                    '0 0 30px hsl(var(--primary) / 0.15)',
+                    '0 0 20px hsl(var(--primary) / 0.1)',
                   ],
                 }}
                 transition={{
-                  duration: 6,
+                  duration: 8,
                   repeat: Infinity,
                   ease: 'easeInOut'
                 }}
@@ -768,9 +780,9 @@ const Index = () => {
                   <TypingText
                     text="Transmission complete."
                     className="text-base md:text-lg terminal-text text-primary/90"
-                    speed={50}
+                    speed={30}
                     onComplete={() => {
-                      setTimeout(() => setCurrentFinalLine(1), 500);
+                      setTimeout(() => setCurrentFinalLine(1), 300);
                     }}
                   />
                 )}
@@ -779,9 +791,9 @@ const Index = () => {
                   <TypingText
                     text="You are now part of something larger than yourself."
                     className="text-base md:text-lg terminal-text text-primary/90"
-                    speed={50}
+                    speed={30}
                     onComplete={() => {
-                      setTimeout(() => setCurrentFinalLine(2), 500);
+                      setTimeout(() => setCurrentFinalLine(2), 300);
                     }}
                   />
                 )}
@@ -791,9 +803,9 @@ const Index = () => {
                     <TypingText
                       text="Are you ready to complete the alignment?"
                       className="text-lg md:text-xl terminal-text cyber-glow"
-                      speed={50}
+                      speed={30}
                       onComplete={() => {
-                        setTimeout(() => setShowButtons(true), 1500);
+                        setTimeout(() => setShowButtons(true), 800);
                       }}
                     />
                   </div>
