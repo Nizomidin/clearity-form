@@ -1,0 +1,6 @@
+{
+  "env": {
+    "VITE_PUBLIC_POSTHOG_KEY": "phc_DsC0xJMYsFNFpBOJYmo3A1RFET5uAVXQFp8yg3DrW9y",
+    "VITE_PUBLIC_POSTHOG_HOST": "https://us.i.posthog.com"
+  }
+}
