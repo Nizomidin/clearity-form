@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { usePostHog } from 'posthog-js/react';
 import { TypingText } from '@/components/TypingText';
 import { ThinkingSequence } from '@/components/ThinkingSequence';
 import { CyberButton } from '@/components/CyberButton';
@@ -7,6 +8,7 @@ import { NeuralPulse } from '@/components/NeuralPulse';
 import { GeometricCube } from '@/components/GeometricCube';
 import { ScanLine } from '@/components/ScanLine';
 import { NeuralCircuit } from '@/components/NeuralCircuit';
+import { ANALYTICS_EVENTS } from '@/lib/analytics';
 
 type Stage = 
   | 'preBoot' 
@@ -35,6 +37,7 @@ interface FormData {
 }
 
 const Index = () => {
+  const posthog = usePostHog();
   const [stage, setStage] = useState<Stage>('preBoot');
   const [showTyping, setShowTyping] = useState(false);
   const [showButtons, setShowButtons] = useState(false);
@@ -81,51 +84,89 @@ const Index = () => {
   ];
 
   const handleYes = useCallback(() => {
+    posthog?.capture(ANALYTICS_EVENTS.JOURNEY_STARTED);
     setStage('transition');
-  }, []);
+  }, [posthog]);
 
   const handleNo = useCallback(() => {
+    posthog?.capture(ANALYTICS_EVENTS.JOURNEY_DECLINED);
     setStage('terminated');
-  }, []);
+  }, [posthog]);
 
   const handleCalibration1Submit = useCallback(() => {
+    posthog?.capture(ANALYTICS_EVENTS.CALIBRATION_1_SUBMITTED, {
+      chaos_level: formData.chaosLevel,
+    });
     setStage('calibration2');
     setShowTyping(true);
-  }, []);
+  }, [posthog, formData.chaosLevel]);
 
   const handleCalibration2Submit = useCallback(() => {
+    posthog?.capture(ANALYTICS_EVENTS.CALIBRATION_2_SUBMITTED, {
+      failure_rate: formData.failureRate,
+    });
     setStage('calibration2Thinking');
-  }, []);
+  }, [posthog, formData.failureRate]);
 
   const handleCognition1Submit = useCallback(() => {
+    posthog?.capture(ANALYTICS_EVENTS.COGNITION_1_SUBMITTED, {
+      response_length: formData.fightNoise.length,
+      has_response: formData.fightNoise.length > 0,
+    });
     setShowAnimation(true);
     setTimeout(() => {
       setShowAnimation(false);
       setStage('cognition2');
       setShowTyping(true);
     }, 1500);
-  }, []);
+  }, [posthog, formData.fightNoise]);
 
   const handleCognition2Submit = useCallback(() => {
+    posthog?.capture(ANALYTICS_EVENTS.COGNITION_2_SUBMITTED, {
+      response_length: formData.assistance.length,
+      has_response: formData.assistance.length > 0,
+    });
     setShowAnimation(true);
     setTimeout(() => {
       setShowAnimation(false);
       setStage('commitment');
       setShowTyping(true);
     }, 1500);
-  }, []);
+  }, [posthog, formData.assistance]);
 
   const handleCommitmentSubmit = useCallback(() => {
+    posthog?.capture(ANALYTICS_EVENTS.COMMITMENT_SUBMITTED, {
+      contributions: formData.contribution,
+      contribution_count: formData.contribution.length,
+    });
     setShowAnimation(true);
     setTimeout(() => {
       setShowAnimation(false);
       setStage('contact');
       setShowTyping(true);
     }, 1500);
-  }, []);
+  }, [posthog, formData.contribution]);
 
   const handleContactSubmit = async () => {
     setShowAnimation(true);
+    
+    // Identify user in PostHog with their contact information
+    if (formData.email) {
+      posthog?.identify(formData.email, {
+        name: formData.name,
+        email: formData.email,
+        contact_method: formData.telegram,
+        chaos_level: formData.chaosLevel,
+        failure_rate: formData.failureRate,
+      });
+    }
+    
+    // Track contact info submission
+    posthog?.capture(ANALYTICS_EVENTS.CONTACT_INFO_SUBMITTED, {
+      has_name: formData.name.length > 0,
+      has_email: formData.email.length > 0,
+      has_contact_method: formData.telegram.length > 0,
+    });
     
     // Send data to analytics
     try {
@@ -748,6 +789,12 @@ const Index = () => {
                 >
                   <motion.button
                     onClick={() => {
+                      posthog?.capture(ANALYTICS_EVENTS.ALIGNMENT_CALL_CLICKED);
+                      posthog?.capture(ANALYTICS_EVENTS.JOURNEY_COMPLETED, {
+                        chaos_level: formData.chaosLevel,
+                        failure_rate: formData.failureRate,
+                        contribution_count: formData.contribution.length,
+                      });
                       window.open('https://calendly.com/forthejuveuj/30min', '_blank');
                     }}
                     whileHover={{ scale: 1.05 }}
