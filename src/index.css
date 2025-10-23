@@ -178,6 +178,16 @@ All colors MUST be HSL.
     }
   }
 
+  @keyframes float {
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(0, -100px, 0); }
+  }
+
+  @keyframes glitch {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 0.02; }
+  }
+
   .terminal-text {
     font-family: 'Courier New', monospace;
     letter-spacing: 0.05em;
@@ -194,5 +204,31 @@ All colors MUST be HSL.
     border: 1px solid hsl(var(--border));
     box-shadow: 0 0 20px hsl(var(--cyber-glow) / 0.2),
                 inset 0 0 20px hsl(var(--cyber-glow) / 0.1);
+  }
+
+  /* Performance optimized animations */
+  .particle-field {
+    will-change: transform;
+    contain: layout style paint;
+  }
+
+  .glitch-overlay {
+    will-change: opacity;
+    contain: layout style paint;
+  }
+
+  .scanline {
+    will-change: transform;
+    contain: layout style paint;
+  }
+
+  .glow-effect {
+    will-change: box-shadow;
+    contain: layout style paint;
+  }
+
+  .pulse-outline {
+    will-change: opacity;
+    contain: layout style paint;
   }
 }
